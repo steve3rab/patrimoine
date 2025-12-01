@@ -32,11 +32,6 @@ public class AssetsIT {
   @BeforeEach
   void setUp() {
 
-    // Birth
-    var birth = new Birth(
-        LocalDate.of(1990, 5, 15),
-        "Antananarivo, Madagascar");
-
     // Address
     var address = new Address(
         "123H",
@@ -44,6 +39,11 @@ public class AssetsIT {
         "Antehiroka",
         "105",
         "Madagascar");
+
+    // Birth
+    var birth = new Birth(
+        LocalDate.of(1990, 5, 15),
+        address);
 
     // Contact
     var contact = new Contact(
