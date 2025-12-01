@@ -2,6 +2,9 @@ package com.ketrika.patrimoine.models.generals;
 
 import java.util.Objects;
 
+/**
+ * Represents a physical postal address.
+ */
 public final class Address {
 
   private final String street;
@@ -10,6 +13,15 @@ public final class Address {
   private final String zipCode;
   private final String country;
 
+  /**
+   * Creates Address.
+   *
+   * @param street street and number
+   * @param city city
+   * @param zipCode postal code
+   * @param country country
+   * @throws NullPointerException if a required field is null
+   */
   public Address(String street, String city, String state, String zipCode, String country) {
     this.street = Objects.requireNonNull(street);
     this.city = Objects.requireNonNull(city);

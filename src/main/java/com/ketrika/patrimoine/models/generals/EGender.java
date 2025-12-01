@@ -2,17 +2,30 @@ package com.ketrika.patrimoine.models.generals;
 
 /**
  * Enumeration representing the gender of a user.
- *
- * <ul>
- * <li>{@link #MASCULINE} — Represents male users.</li>
- * <li>{@link #FEMININE} — Represents female users.</li>
- * </ul>
- *
  */
 public enum EGender {
-  /** Male gender. */
-  MASCULINE,
 
-  /** Female gender. */
-  FEMININE;
+  /** Male gender */
+  MASCULINE("Masculine"),
+
+  /** Female gender */
+  FEMININE("Feminine"),
+
+  /** Other / Non-binary / undisclosed gender. Used for inclusivity. */
+  OTHER("Other");
+
+  private final String displayName;
+
+  /**
+   * Constructs a gender enum.
+   *
+   * @param displayName name of the gender
+   */
+  EGender(String displayName) {
+    this.displayName = displayName;
+  }
+
+  public String getDisplayName() {
+    return displayName;
+  }
 }
