@@ -36,12 +36,13 @@
 
 		<log.version>2.23.1</log.version>
 		<eclipse.annot.version>2.3.0</eclipse.annot.version>
+		
+		<git-code-format-maven-plugin.version>5.4</git-code-format-maven-plugin.version>
 
 		<maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
 		<maven.surefire.plugin.version>2.22.2</maven.surefire.plugin.version>
 		<maven.failsafe.plugin.version>2.22.2</maven.failsafe.plugin.version>
 		<maven.javadoc.plugin.version>3.3.0</maven.javadoc.plugin.version>
-		<formatter-maven-plugin.version>2.29.0</formatter-maven-plugin.version>
 
 		<jacoco.version>0.8.7</jacoco.version>
 
@@ -65,6 +66,12 @@
 			<groupId>org.eclipse.jdt</groupId>
 			<artifactId>org.eclipse.jdt.annotation</artifactId>
 			<version>${eclipse.annot.version}</version>
+		</dependency>
+		<!-- Cosium formatter -->
+		<dependency>
+			<groupId>com.cosium.code</groupId>
+			<artifactId>google-java-format</artifactId>
+			<version>${git-code-format-maven-plugin.version}</version>
 		</dependency>
 		<!-- JUnit 5 for testing -->
 		<dependency>
@@ -142,13 +149,18 @@
 
 				<!-- Formatter plugin -->
 				<plugin>
-					<groupId>net.revelc.code.formatter</groupId>
-					<artifactId>formatter-maven-plugin</artifactId>
-					<version>${formatter-maven-plugin.version}</version>
-					<configuration>
-						<lineEnding>LF</lineEnding>
-						<encoding>${project.build.sourceEncoding}</encoding>
-					</configuration>
+					<groupId>com.cosium.code</groupId>
+					<artifactId>git-code-format-maven-plugin</artifactId>
+					<version>${git-code-format-maven-plugin.version}</version>
+					<executions>
+						<!-- On commit, format the modified files -->
+						<execution>
+							<id>install-formatter-hook</id>
+							<goals>
+								<goal>install-hooks</goal>
+							</goals>
+						</execution>
+					</executions>
 				</plugin>
 
 				<!-- Maven Dependency Plugin -->
