@@ -5,6 +5,7 @@
 	<groupId>com.ketrika</groupId>
 	<artifactId>patrimoine</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+
 	<name>Simulateur de Patrimoine</name>
 
 	<packaging>jar</packaging>
@@ -40,6 +41,7 @@
 		<maven.surefire.plugin.version>2.22.2</maven.surefire.plugin.version>
 		<maven.failsafe.plugin.version>2.22.2</maven.failsafe.plugin.version>
 		<maven.javadoc.plugin.version>3.3.0</maven.javadoc.plugin.version>
+		<formatter-maven-plugin.version>2.29.0</formatter-maven-plugin.version>
 
 		<jacoco.version>0.8.7</jacoco.version>
 
@@ -138,6 +140,47 @@
 					</configuration>
 				</plugin>
 
+				<!-- Formatter plugin -->
+				<plugin>
+					<groupId>net.revelc.code.formatter</groupId>
+					<artifactId>formatter-maven-plugin</artifactId>
+					<version>${formatter-maven-plugin.version}</version>
+					<configuration>
+						<lineEnding>LF</lineEnding>
+						<encoding>${project.build.sourceEncoding}</encoding>
+					</configuration>
+				</plugin>
+
+				<!-- Maven Dependency Plugin -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<version>3.6.1</version>
+					<executions>
+						<!-- Analyze dependencies -->
+						<execution>
+							<id>analyze</id>
+							<phase>validate</phase>
+							<goals>
+								<goal>analyze</goal>
+							</goals>
+						</execution>
+						<!-- Detect conflicts and show dependency tree -->
+						<execution>
+							<id>tree</id>
+							<phase>validate</phase>
+							<goals>
+								<goal>tree</goal>
+							</goals>
+							<configuration>
+								<verbose>true</verbose>
+								<outputFile>
+									${project.build.directory}/dependency-tree.txt</outputFile>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+
 				<!-- JaCoCo plugin for code coverage -->
 				<plugin>
 					<groupId>org.jacoco</groupId>
@@ -158,8 +201,23 @@
 						</execution>
 					</executions>
 				</plugin>
+
 			</plugins>
 		</pluginManagement>
 	</build>
+
+	<reporting>
+		<plugins>
+			<!-- JaCoCo report plugin -->
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>${jacoco.version}</version>
+				<configuration>
+					<outputDirectory>${project.reporting.outputDirectory}/jacoco</outputDirectory>
+				</configuration>
+			</plugin>
+		</plugins>
+	</reporting>
 
 </project>
