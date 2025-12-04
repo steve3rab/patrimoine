@@ -1,6 +1,7 @@
 package com.ketrika.patrimoine.models.generals;
 
 import java.util.Objects;
+import com.ketrika.patrimoine.utils.UtilsValidator;
 
 /**
  * Represents a person's contact information.
@@ -31,7 +32,7 @@ public final class Contact {
    * @throws NullPointerException if two first arguments are null
    */
   public Contact(String email, String phone, String secondaryPhone) {
-    this.email = Objects.requireNonNull(email, "email cannot be null");
+    this.email = UtilsValidator.requireValidEmail(email);
     this.phone = Objects.requireNonNull(phone, "phone cannot be null");
     this.secondaryPhone = secondaryPhone;
   }
