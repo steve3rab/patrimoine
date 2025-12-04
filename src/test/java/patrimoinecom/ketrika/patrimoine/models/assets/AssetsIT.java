@@ -21,7 +21,7 @@ import com.ketrika.patrimoine.models.generals.Contact;
 import com.ketrika.patrimoine.models.generals.EGender;
 import com.ketrika.patrimoine.models.generals.Person;
 
-public class AssetsIT {
+class AssetsIT {
 
   private Person person;
   private BankAccountAsset bank;

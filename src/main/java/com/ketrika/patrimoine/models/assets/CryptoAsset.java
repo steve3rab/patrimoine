@@ -33,7 +33,7 @@ public final class CryptoAsset implements IAsset {
    * @throws NullPointerException if any argument is null
    */
   public CryptoAsset(String name, String symbol, BigDecimal quantity, IValuation<CryptoAsset> valuation) {
-    this(name, symbol, quantity, null, null, null, null, null, null, null, valuation);
+    this(name, symbol, quantity, null, null, null, null, null, null, valuation);
   }
 
   /**
@@ -45,7 +45,6 @@ public final class CryptoAsset implements IAsset {
       BigDecimal quantity,
       String network,
       String walletAddress,
-      Boolean coldStorage,
       Instant acquiredAt,
       BigDecimal purchasePrice,
       Currency currency,

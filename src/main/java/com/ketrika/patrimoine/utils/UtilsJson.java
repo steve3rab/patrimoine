@@ -15,6 +15,10 @@ import tools.jackson.databind.JsonNode;
  */
 public class UtilsJson {
 
+  private UtilsJson() {
+    // utility class
+  }
+
   /**
    * Extracts a textual field from a JSON node as an {@link Optional}.
    * <p>

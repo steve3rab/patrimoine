@@ -34,7 +34,7 @@ public final class CollectibleAsset implements IAsset {
    * @throws NullPointerException if any argument is null
    */
   public CollectibleAsset(String name, String category, IValuation<CollectibleAsset> valuation) {
-    this(name, category, null, null, null, null, null, null, null, null, null, null, valuation);
+    this(name, category, null, null, null, null, null, null, null, null, null, valuation);
   }
 
   /**
@@ -45,7 +45,6 @@ public final class CollectibleAsset implements IAsset {
       String category,
       String manufacturer,
       String model,
-      Integer year,
       String serialNumber,
       Boolean limitedEdition,
       Integer editionNumber,

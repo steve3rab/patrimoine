@@ -34,7 +34,7 @@ public final class LandParcelAsset implements IAsset {
    * @throws NullPointerException if any argument is null
    */
   public LandParcelAsset(String name, double acreage, String zoningType, IValuation<LandParcelAsset> valuation) {
-    this(name, acreage, zoningType, null, null, null, null, null, null, null, null, valuation);
+    this(name, acreage, zoningType, null, null, null, null, null, null, null, valuation);
   }
 
   /**
@@ -51,7 +51,6 @@ public final class LandParcelAsset implements IAsset {
       Instant acquiredAt,
       Currency currency,
       List<String> tags,
-      Instant createdAt,
       IValuation<LandParcelAsset> valuation
 
   ) {
@@ -66,7 +65,7 @@ public final class LandParcelAsset implements IAsset {
     this.currency = currency;
     this.valuation = Objects.requireNonNull(valuation);
     this.tags = tags != null ? List.copyOf(tags) : null;
-    this.createdAt = Instant.now();;
+    this.createdAt = Instant.now();
   }
 
   @Override

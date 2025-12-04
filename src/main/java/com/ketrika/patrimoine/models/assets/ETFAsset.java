@@ -32,7 +32,7 @@ public final class ETFAsset implements IAsset {
    * @throws NullPointerException if any argument is null
    */
   public ETFAsset(String name, String ticker, int shares, IValuation<ETFAsset> valuation) {
-    this(name, ticker, shares, null, null, null, null, null, null, null, valuation);
+    this(name, ticker, shares, null, null, null, null, null, null, valuation);
   }
 
   /**
@@ -48,7 +48,6 @@ public final class ETFAsset implements IAsset {
       BigDecimal purchasePrice,
       Instant acquiredAt,
       List<String> tags,
-      Instant createdAt,
       IValuation<ETFAsset> valuation) {
     this.name = Objects.requireNonNull(name);
     this.ticker = Objects.requireNonNull(ticker);

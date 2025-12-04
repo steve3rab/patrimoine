@@ -34,7 +34,7 @@ public final class FranchiseRightAsset implements IAsset {
    * @throws NullPointerException if any argument is null
    */
   public FranchiseRightAsset(String name, int yearsRemaining, BigDecimal annualProfit, IValuation<FranchiseRightAsset> valuation) {
-    this(name, yearsRemaining, annualProfit, null, null, null, null, null, null, null, null, valuation);
+    this(name, yearsRemaining, annualProfit, null, null, null, null, null, null, null, valuation);
   }
 
   /**
@@ -49,7 +49,6 @@ public final class FranchiseRightAsset implements IAsset {
       Instant contractStart,
       Instant contractEnd,
       Boolean renewable,
-      BigDecimal purchasePrice,
       Currency currency,
       List<String> tags,
       IValuation<FranchiseRightAsset> valuation) {
@@ -64,7 +63,7 @@ public final class FranchiseRightAsset implements IAsset {
     this.valuation = Objects.requireNonNull(valuation);
     this.currency = currency;
     this.tags = tags != null ? List.copyOf(tags) : null;
-    this.createdAt = Instant.now();;
+    this.createdAt = Instant.now();
   }
 
   public String getFranchisor() {
