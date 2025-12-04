@@ -1,0 +1,39 @@
+[
+  {
+    "firstname": "Alice",
+    "lastname": "Brown",
+    "gender": "F",
+    "contact": {
+      "email": "alice@example.com",
+      "phone": "111-222",
+      "secondaryPhone": "333-444"
+    },
+    "address": {
+      "street": "1 Main St",
+      "city": "Townsville",
+      "state": "TS",
+      "zipCode": "00001",
+      "country": "CountryA"
+    },
+    "birth": {
+      "date": "1990-01-01",
+      "place": {
+        "street": "Hospital Rd",
+        "city": "CityX",
+        "state": "StateX",
+        "zipCode": "99999",
+        "country": "CountryA"
+      }
+    },
+    "assets": [
+      {
+        "type": "bank",
+        "name": "Primary Account",
+        "iban": "IBAN12345",
+        "value": "1500.00"
+      }
+    ],
+    "liabilities": [],
+    "participations": []
+  }
+]

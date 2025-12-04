@@ -29,6 +29,7 @@ public class ImportCommand implements Callable<Integer> {
   private File jsonFile;
 
   private final PersonParser personParser = new PersonParser();
+  private final List<Person> persons = new CopyOnWriteArrayList<>();
 
   @Override
   public Integer call() throws Exception {
@@ -50,8 +51,6 @@ public class ImportCommand implements Callable<Integer> {
       return 1;
     }
 
-    List<Person> persons = new CopyOnWriteArrayList<>();
-
     try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
       // Submit parsing tasks concurrently
       List<Future<Optional<Person>>> futures = StreamSupport
@@ -70,5 +69,9 @@ public class ImportCommand implements Callable<Integer> {
 
     LOGGER.trace("Successfully imported: {}", persons.size());
     return 0;
+  }
+
+  public List<Person> getPersons() {
+    return persons;
   }
 }

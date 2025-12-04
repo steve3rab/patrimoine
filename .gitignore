@@ -39,7 +39,6 @@ build/
 gradle-app.setting
 !gradle-wrapper.jar
 *.ts
-*.json
 
 ##############################
 ## Vaadin
