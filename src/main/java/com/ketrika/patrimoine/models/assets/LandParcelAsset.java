@@ -24,59 +24,102 @@ public final class LandParcelAsset implements IAsset {
   private final IValuation<LandParcelAsset> valuation;
   private final Instant createdAt;
 
-  /**
-   * Constructs a new LandParcelAsset.
-   * 
-   * @param name
-   * @param acreage
-   * @param zoningType
-   * @param valuation
-   * @throws NullPointerException if any argument is null
-   */
-  public LandParcelAsset(String name, double acreage, String zoningType, IValuation<LandParcelAsset> valuation) {
-    this(name, acreage, zoningType, null, null, null, null, null, null, null, valuation);
-  }
+  private LandParcelAsset(Builder builder) {
+    this.name = Objects.requireNonNull(builder.name);
+    this.acreage = Objects.requireNonNull(builder.acreage);
+    this.zoningType = Objects.requireNonNull(builder.zoningType);
+    this.valuation = Objects.requireNonNull(builder.valuation);
 
-  /**
-   * Full constructor including optional metadata.
-   */
-  public LandParcelAsset(
-      String name,
-      Double acreage,
-      String zoningType,
-      String location,
-      String parcelId,
-      Boolean roadAccess,
-      BigDecimal purchasePrice,
-      Instant acquiredAt,
-      Currency currency,
-      List<String> tags,
-      IValuation<LandParcelAsset> valuation
+    this.location = builder.location;
+    this.parcelId = builder.parcelId;
+    this.roadAccess = builder.roadAccess;
+    this.purchasePrice = builder.purchasePrice;
+    this.acquiredAt = builder.acquiredAt;
+    this.currency = builder.currency;
+    this.tags = builder.tags != null ? List.copyOf(builder.tags) : null;
 
-  ) {
-    this.name = Objects.requireNonNull(name);
-    this.acreage = acreage;
-    this.zoningType = Objects.requireNonNull(zoningType);
-    this.location = location;
-    this.parcelId = parcelId;
-    this.roadAccess = roadAccess;
-    this.purchasePrice = purchasePrice;
-    this.acquiredAt = acquiredAt;
-    this.currency = currency;
-    this.valuation = Objects.requireNonNull(valuation);
-    this.tags = tags != null ? List.copyOf(tags) : null;
     this.createdAt = Instant.now();
   }
 
-  @Override
-  public Currency currency() {
-    return currency != null ? currency : IAsset.super.currency();
+  // -------------------------
+  // BUILDER
+  // -------------------------
+  public static class Builder {
+    private String name;
+    private Double acreage; // use Double for null check
+    private String zoningType;
+    private String location;
+    private String parcelId;
+    private Boolean roadAccess;
+    private BigDecimal purchasePrice;
+    private Instant acquiredAt;
+    private Currency currency;
+    private List<String> tags;
+    private IValuation<LandParcelAsset> valuation;
+
+    public Builder name(String name) {
+      this.name = name;
+      return this;
+    }
+
+    public Builder acreage(double acreage) {
+      this.acreage = acreage;
+      return this;
+    }
+
+    public Builder zoningType(String zoningType) {
+      this.zoningType = zoningType;
+      return this;
+    }
+
+    public Builder location(String location) {
+      this.location = location;
+      return this;
+    }
+
+    public Builder parcelId(String parcelId) {
+      this.parcelId = parcelId;
+      return this;
+    }
+
+    public Builder roadAccess(Boolean roadAccess) {
+      this.roadAccess = roadAccess;
+      return this;
+    }
+
+    public Builder purchasePrice(BigDecimal purchasePrice) {
+      this.purchasePrice = purchasePrice;
+      return this;
+    }
+
+    public Builder acquiredAt(Instant acquiredAt) {
+      this.acquiredAt = acquiredAt;
+      return this;
+    }
+
+    public Builder currency(Currency currency) {
+      this.currency = currency;
+      return this;
+    }
+
+    public Builder tags(List<String> tags) {
+      this.tags = tags;
+      return this;
+    }
+
+    public Builder valuation(IValuation<LandParcelAsset> valuation) {
+      this.valuation = valuation;
+      return this;
+    }
+
+    public LandParcelAsset build() {
+      return new LandParcelAsset(this);
+    }
   }
 
-  @Override
-  public List<String> tags() {
-    return tags != null ? tags : IAsset.super.tags();
-  }
+  // -------------------------
+  // GETTERS
+  // -------------------------
 
   public String getLocation() {
     return location;
@@ -111,8 +154,17 @@ public final class LandParcelAsset implements IAsset {
   }
 
   @Override
+  public Currency currency() {
+    return currency != null ? currency : IAsset.super.currency();
+  }
+
+  @Override
+  public List<String> tags() {
+    return tags != null ? tags : IAsset.super.tags();
+  }
+
+  @Override
   public BigDecimal value() {
-    // Value = PricePerAcre × Acreage
     return valuation.calculate(this);
   }
 

@@ -24,47 +24,102 @@ public final class FranchiseRightAsset implements IAsset {
   private final IValuation<FranchiseRightAsset> valuation;
   private final Instant createdAt;
 
-  /**
-   * Constructs a new FranchiseRightAsset.
-   * 
-   * @param name
-   * @param yearsRemaining
-   * @param annualProfit
-   * @param valuation
-   * @throws NullPointerException if any argument is null
-   */
-  public FranchiseRightAsset(String name, int yearsRemaining, BigDecimal annualProfit, IValuation<FranchiseRightAsset> valuation) {
-    this(name, yearsRemaining, annualProfit, null, null, null, null, null, null, null, valuation);
-  }
+  private FranchiseRightAsset(Builder builder) {
+    this.name = Objects.requireNonNull(builder.name);
+    this.yearsRemaining = Objects.requireNonNull(builder.yearsRemaining);
+    this.annualProfit = Objects.requireNonNull(builder.annualProfit);
+    this.valuation = Objects.requireNonNull(builder.valuation);
 
-  /**
-   * Constructor with optional metadata
-   */
-  public FranchiseRightAsset(
-      String name,
-      Integer yearsRemaining,
-      BigDecimal annualProfit,
-      String franchisor,
-      String contractId,
-      Instant contractStart,
-      Instant contractEnd,
-      Boolean renewable,
-      Currency currency,
-      List<String> tags,
-      IValuation<FranchiseRightAsset> valuation) {
-    this.name = Objects.requireNonNull(name);
-    this.yearsRemaining = yearsRemaining;
-    this.annualProfit = Objects.requireNonNull(annualProfit);
-    this.franchisor = franchisor;
-    this.contractId = contractId;
-    this.contractStart = contractStart;
-    this.contractEnd = contractEnd;
-    this.renewable = renewable;
-    this.valuation = Objects.requireNonNull(valuation);
-    this.currency = currency;
-    this.tags = tags != null ? List.copyOf(tags) : null;
+    this.franchisor = builder.franchisor;
+    this.contractId = builder.contractId;
+    this.contractStart = builder.contractStart;
+    this.contractEnd = builder.contractEnd;
+    this.renewable = builder.renewable;
+    this.currency = builder.currency;
+    this.tags = builder.tags != null ? List.copyOf(builder.tags) : null;
+
     this.createdAt = Instant.now();
   }
+
+  // -------------------------
+  // BUILDER
+  // -------------------------
+  public static class Builder {
+    private String name;
+    private Integer yearsRemaining; // use Integer to allow null check
+    private BigDecimal annualProfit;
+    private String franchisor;
+    private String contractId;
+    private Instant contractStart;
+    private Instant contractEnd;
+    private Boolean renewable;
+    private Currency currency;
+    private List<String> tags;
+    private IValuation<FranchiseRightAsset> valuation;
+
+    public Builder name(String name) {
+      this.name = name;
+      return this;
+    }
+
+    public Builder yearsRemaining(int yearsRemaining) {
+      this.yearsRemaining = yearsRemaining;
+      return this;
+    }
+
+    public Builder annualProfit(BigDecimal annualProfit) {
+      this.annualProfit = annualProfit;
+      return this;
+    }
+
+    public Builder franchisor(String franchisor) {
+      this.franchisor = franchisor;
+      return this;
+    }
+
+    public Builder contractId(String contractId) {
+      this.contractId = contractId;
+      return this;
+    }
+
+    public Builder contractStart(Instant contractStart) {
+      this.contractStart = contractStart;
+      return this;
+    }
+
+    public Builder contractEnd(Instant contractEnd) {
+      this.contractEnd = contractEnd;
+      return this;
+    }
+
+    public Builder renewable(Boolean renewable) {
+      this.renewable = renewable;
+      return this;
+    }
+
+    public Builder currency(Currency currency) {
+      this.currency = currency;
+      return this;
+    }
+
+    public Builder tags(List<String> tags) {
+      this.tags = tags;
+      return this;
+    }
+
+    public Builder valuation(IValuation<FranchiseRightAsset> valuation) {
+      this.valuation = valuation;
+      return this;
+    }
+
+    public FranchiseRightAsset build() {
+      return new FranchiseRightAsset(this);
+    }
+  }
+
+  // -------------------------
+  // GETTERS
+  // -------------------------
 
   public String getFranchisor() {
     return franchisor;
@@ -110,7 +165,6 @@ public final class FranchiseRightAsset implements IAsset {
 
   @Override
   public BigDecimal value() {
-    // Value = AnnualProfit × YearsRemaining
     return valuation.calculate(this);
   }
 

@@ -18,34 +18,60 @@ public final class PreciousMetalAsset implements IAsset {
   private final List<String> tags;
   private final Instant createdAt;
 
-  /**
-   * Constructs a new PreciousMetalAsset.
-   * 
-   * @param name
-   * @param weightInGrams
-   * @param valuation
-   * @throws NullPointerException if any argument is null
-   */
-  public PreciousMetalAsset(String name, BigDecimal weightInGrams, IValuation<PreciousMetalAsset> valuation) {
-    this(name, weightInGrams, null, null, valuation);
-  }
+  private PreciousMetalAsset(Builder builder) {
+    this.name = Objects.requireNonNull(builder.name);
+    this.weightInGrams = Objects.requireNonNull(builder.weightInGrams);
+    this.valuation = Objects.requireNonNull(builder.valuation);
 
-  /**
-   * Full constructor including optional metadata.
-   */
-  public PreciousMetalAsset(
-      String name,
-      BigDecimal weightInGrams,
-      Currency currency,
-      List<String> tags,
-      IValuation<PreciousMetalAsset> valuation) {
-    this.name = Objects.requireNonNull(name);
-    this.weightInGrams = Objects.requireNonNull(weightInGrams);
-    this.valuation = Objects.requireNonNull(valuation);
-    this.currency = currency;
-    this.tags = tags != null ? List.copyOf(tags) : null;
+    this.currency = builder.currency;
+    this.tags = builder.tags != null ? List.copyOf(builder.tags) : null;
+
     this.createdAt = Instant.now();
   }
+
+  // -------------------------
+  // BUILDER
+  // -------------------------
+  public static class Builder {
+    private String name;
+    private BigDecimal weightInGrams;
+    private IValuation<PreciousMetalAsset> valuation;
+    private Currency currency;
+    private List<String> tags;
+
+    public Builder name(String name) {
+      this.name = name;
+      return this;
+    }
+
+    public Builder weightInGrams(BigDecimal weightInGrams) {
+      this.weightInGrams = weightInGrams;
+      return this;
+    }
+
+    public Builder valuation(IValuation<PreciousMetalAsset> valuation) {
+      this.valuation = valuation;
+      return this;
+    }
+
+    public Builder currency(Currency currency) {
+      this.currency = currency;
+      return this;
+    }
+
+    public Builder tags(List<String> tags) {
+      this.tags = tags;
+      return this;
+    }
+
+    public PreciousMetalAsset build() {
+      return new PreciousMetalAsset(this);
+    }
+  }
+
+  // -------------------------
+  // GETTERS
+  // -------------------------
 
   public BigDecimal getWeightInGrams() {
     return weightInGrams;
@@ -67,7 +93,6 @@ public final class PreciousMetalAsset implements IAsset {
 
   @Override
   public BigDecimal value() {
-    // Value = PricePerGram × WeightInGrams
     return valuation.calculate(this);
   }
 

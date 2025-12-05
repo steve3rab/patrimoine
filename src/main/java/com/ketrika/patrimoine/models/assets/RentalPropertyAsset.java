@@ -14,58 +14,88 @@ public final class RentalPropertyAsset implements IAsset {
   private final String name;
   private final String address;
   private final BigDecimal monthlyRent;
-  private final IValuation<RentalPropertyAsset> valuation;
   private final BigDecimal areaSqM;
   private final int yearBuilt;
   private final Currency currency;
   private final List<String> tags;
+  private final IValuation<RentalPropertyAsset> valuation;
   private final Instant createdAt;
 
-  /**
-   * Constructs a new RentalPropertyAsset.
-   * 
-   * @param name
-   * @param address
-   * @param monthlyRent
-   * @param valuation
-   * @throws NullPointerException if any argument is null
-   */
-  public RentalPropertyAsset(String name, String address, BigDecimal monthlyRent, IValuation<RentalPropertyAsset> valuation) {
-    this(name, address, monthlyRent, null, 0, null, null, valuation);
-  }
+  private RentalPropertyAsset(Builder builder) {
+    this.name = Objects.requireNonNull(builder.name);
+    this.address = Objects.requireNonNull(builder.address);
+    this.monthlyRent = Objects.requireNonNull(builder.monthlyRent);
+    this.valuation = Objects.requireNonNull(builder.valuation);
 
-  /**
-   * Full constructor including optional metadata.
-   */
-  public RentalPropertyAsset(
-      String name,
-      String address,
-      BigDecimal monthlyRent,
-      BigDecimal areaSqM,
-      int yearBuilt,
-      Currency currency,
-      List<String> tags,
-      IValuation<RentalPropertyAsset> valuation) {
-    this.name = Objects.requireNonNull(name);
-    this.address = Objects.requireNonNull(address);
-    this.monthlyRent = Objects.requireNonNull(monthlyRent);
-    this.valuation = Objects.requireNonNull(valuation);
-    this.areaSqM = areaSqM;
-    this.yearBuilt = yearBuilt;
-    this.currency = currency;
-    this.tags = tags != null ? List.copyOf(tags) : null;
+    this.areaSqM = builder.areaSqM;
+    this.yearBuilt = builder.yearBuilt;
+    this.currency = builder.currency;
+    this.tags = builder.tags != null ? List.copyOf(builder.tags) : null;
+
     this.createdAt = Instant.now();
   }
 
-  @Override
-  public Currency currency() {
-    return currency != null ? currency : IAsset.super.currency();
+  // -------------------------
+  // BUILDER
+  // -------------------------
+  public static class Builder {
+    private String name;
+    private String address;
+    private BigDecimal monthlyRent;
+    private BigDecimal areaSqM;
+    private int yearBuilt;
+    private Currency currency;
+    private List<String> tags;
+    private IValuation<RentalPropertyAsset> valuation;
+
+    public Builder name(String name) {
+      this.name = name;
+      return this;
+    }
+
+    public Builder address(String address) {
+      this.address = address;
+      return this;
+    }
+
+    public Builder monthlyRent(BigDecimal monthlyRent) {
+      this.monthlyRent = monthlyRent;
+      return this;
+    }
+
+    public Builder areaSqM(BigDecimal areaSqM) {
+      this.areaSqM = areaSqM;
+      return this;
+    }
+
+    public Builder yearBuilt(int yearBuilt) {
+      this.yearBuilt = yearBuilt;
+      return this;
+    }
+
+    public Builder currency(Currency currency) {
+      this.currency = currency;
+      return this;
+    }
+
+    public Builder tags(List<String> tags) {
+      this.tags = tags;
+      return this;
+    }
+
+    public Builder valuation(IValuation<RentalPropertyAsset> valuation) {
+      this.valuation = valuation;
+      return this;
+    }
+
+    public RentalPropertyAsset build() {
+      return new RentalPropertyAsset(this);
+    }
   }
 
-  @Override
-  public List<String> tags() {
-    return tags != null ? tags : IAsset.super.tags();
-  }
+  // -------------------------
+  // GETTERS
+  // -------------------------
 
   public BigDecimal getAreaSqM() {
     return areaSqM;
@@ -88,8 +118,17 @@ public final class RentalPropertyAsset implements IAsset {
   }
 
   @Override
+  public Currency currency() {
+    return currency != null ? currency : IAsset.super.currency();
+  }
+
+  @Override
+  public List<String> tags() {
+    return tags != null ? tags : IAsset.super.tags();
+  }
+
+  @Override
   public BigDecimal value() {
-    // Value= MonthlyRent × 12 (per year)
     return valuation.calculate(this);
   }
 

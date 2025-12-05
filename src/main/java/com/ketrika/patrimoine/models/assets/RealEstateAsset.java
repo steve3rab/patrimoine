@@ -13,7 +13,7 @@ public final class RealEstateAsset implements IAsset {
 
   private final String name;
   private final String address;
-  private final String propertyType; // e.g., Residential, Commercial, Land
+  private final String propertyType;
   private final BigDecimal landAreaSqM;
   private final BigDecimal buildingAreaSqM;
   private final int yearBuilt;
@@ -22,51 +22,88 @@ public final class RealEstateAsset implements IAsset {
   private final IValuation<RealEstateAsset> valuation;
   private final Instant createdAt;
 
-  /**
-   * Creates real estate asset.
-   *
-   * @param name asset name
-   * @param valuation to compute value
-   * @throws NullPointerException if any argument is null
-   */
-  public RealEstateAsset(String name, IValuation<RealEstateAsset> valuation) {
-    this(name, null, null, null, null, 0, null, null, valuation);
-  }
+  private RealEstateAsset(Builder builder) {
+    this.name = Objects.requireNonNull(builder.name);
+    this.valuation = Objects.requireNonNull(builder.valuation);
 
-  /**
-   * Full constructor including optional metadata.
-   */
-  public RealEstateAsset(
-      String name,
-      String address,
-      String propertyType,
-      BigDecimal landAreaSqM,
-      BigDecimal buildingAreaSqM,
-      int yearBuilt,
-      Currency currency,
-      List<String> tags,
-      IValuation<RealEstateAsset> valuation) {
-    this.name = Objects.requireNonNull(name);
-    this.valuation = Objects.requireNonNull(valuation);
-    this.address = address;
-    this.propertyType = propertyType;
-    this.landAreaSqM = landAreaSqM;
-    this.buildingAreaSqM = buildingAreaSqM;
-    this.yearBuilt = yearBuilt;
-    this.currency = currency;
-    this.tags = tags != null ? List.copyOf(tags) : null;
+    this.address = builder.address;
+    this.propertyType = builder.propertyType;
+    this.landAreaSqM = builder.landAreaSqM;
+    this.buildingAreaSqM = builder.buildingAreaSqM;
+    this.yearBuilt = builder.yearBuilt;
+    this.currency = builder.currency;
+    this.tags = builder.tags != null ? List.copyOf(builder.tags) : null;
+
     this.createdAt = Instant.now();
   }
 
-  @Override
-  public Currency currency() {
-    return currency != null ? currency : IAsset.super.currency();
+  // -------------------------
+  // BUILDER
+  // -------------------------
+  public static class Builder {
+    private String name;
+    private String address;
+    private String propertyType;
+    private BigDecimal landAreaSqM;
+    private BigDecimal buildingAreaSqM;
+    private int yearBuilt;
+    private Currency currency;
+    private List<String> tags;
+    private IValuation<RealEstateAsset> valuation;
+
+    public Builder name(String name) {
+      this.name = name;
+      return this;
+    }
+
+    public Builder address(String address) {
+      this.address = address;
+      return this;
+    }
+
+    public Builder propertyType(String propertyType) {
+      this.propertyType = propertyType;
+      return this;
+    }
+
+    public Builder landAreaSqM(BigDecimal landAreaSqM) {
+      this.landAreaSqM = landAreaSqM;
+      return this;
+    }
+
+    public Builder buildingAreaSqM(BigDecimal buildingAreaSqM) {
+      this.buildingAreaSqM = buildingAreaSqM;
+      return this;
+    }
+
+    public Builder yearBuilt(int yearBuilt) {
+      this.yearBuilt = yearBuilt;
+      return this;
+    }
+
+    public Builder currency(Currency currency) {
+      this.currency = currency;
+      return this;
+    }
+
+    public Builder tags(List<String> tags) {
+      this.tags = tags;
+      return this;
+    }
+
+    public Builder valuation(IValuation<RealEstateAsset> valuation) {
+      this.valuation = valuation;
+      return this;
+    }
+
+    public RealEstateAsset build() {
+      return new RealEstateAsset(this);
+    }
   }
 
-  @Override
-  public List<String> tags() {
-    return tags != null ? tags : IAsset.super.tags();
-  }
+  // -------------------------
+  // GETTERS
+  // -------------------------
 
   public String getAddress() {
     return address;
@@ -90,6 +127,16 @@ public final class RealEstateAsset implements IAsset {
 
   public Instant getCreatedAt() {
     return createdAt;
+  }
+
+  @Override
+  public Currency currency() {
+    return currency != null ? currency : IAsset.super.currency();
+  }
+
+  @Override
+  public List<String> tags() {
+    return tags != null ? tags : IAsset.super.tags();
   }
 
   @Override

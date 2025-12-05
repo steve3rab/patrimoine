@@ -22,52 +22,88 @@ public final class LifeInsuranceAsset implements IAsset {
   private final IValuation<LifeInsuranceAsset> valuation;
   private final Instant createdAt;
 
-  /**
-   * Constructs a new LifeInsuranceAsset.
-   * 
-   * @param name policy name
-   * @param contractNumber insurer contract identifier
-   * @param valuation that returns policy cash value
-   * @throws NullPointerException if any argument is null
-   */
-  public LifeInsuranceAsset(String name, String contractNumber, IValuation<LifeInsuranceAsset> valuation) {
-    this(name, contractNumber, null, null, null, null, null, null, valuation);
-  }
+  private LifeInsuranceAsset(Builder builder) {
+    this.name = Objects.requireNonNull(builder.name);
+    this.contractNumber = Objects.requireNonNull(builder.contractNumber);
+    this.valuation = Objects.requireNonNull(builder.valuation);
 
-  /**
-   * Full constructor including optional metadata.
-   */
-  public LifeInsuranceAsset(
-      String name,
-      String contractNumber,
-      String ownerName,
-      String insuredPersonName,
-      String beneficiaryName,
-      String issuer,
-      Currency currency,
-      List<String> tags,
-      IValuation<LifeInsuranceAsset> valuation) {
-    this.name = Objects.requireNonNull(name);
-    this.contractNumber = Objects.requireNonNull(contractNumber);
-    this.ownerName = ownerName;
-    this.insuredPersonName = insuredPersonName;
-    this.beneficiaryName = beneficiaryName;
-    this.issuer = issuer;
-    this.currency = currency;
-    this.valuation = Objects.requireNonNull(valuation);
-    this.tags = tags != null ? List.copyOf(tags) : null;
+    this.ownerName = builder.ownerName;
+    this.insuredPersonName = builder.insuredPersonName;
+    this.beneficiaryName = builder.beneficiaryName;
+    this.issuer = builder.issuer;
+    this.currency = builder.currency;
+    this.tags = builder.tags != null ? List.copyOf(builder.tags) : null;
+
     this.createdAt = Instant.now();
   }
 
-  @Override
-  public Currency currency() {
-    return currency != null ? currency : IAsset.super.currency();
+  // -------------------------
+  // BUILDER
+  // -------------------------
+  public static class Builder {
+    private String name;
+    private String contractNumber;
+    private String ownerName;
+    private String insuredPersonName;
+    private String beneficiaryName;
+    private String issuer;
+    private Currency currency;
+    private List<String> tags;
+    private IValuation<LifeInsuranceAsset> valuation;
+
+    public Builder name(String name) {
+      this.name = name;
+      return this;
+    }
+
+    public Builder contractNumber(String contractNumber) {
+      this.contractNumber = contractNumber;
+      return this;
+    }
+
+    public Builder ownerName(String ownerName) {
+      this.ownerName = ownerName;
+      return this;
+    }
+
+    public Builder insuredPersonName(String insuredPersonName) {
+      this.insuredPersonName = insuredPersonName;
+      return this;
+    }
+
+    public Builder beneficiaryName(String beneficiaryName) {
+      this.beneficiaryName = beneficiaryName;
+      return this;
+    }
+
+    public Builder issuer(String issuer) {
+      this.issuer = issuer;
+      return this;
+    }
+
+    public Builder currency(Currency currency) {
+      this.currency = currency;
+      return this;
+    }
+
+    public Builder tags(List<String> tags) {
+      this.tags = tags;
+      return this;
+    }
+
+    public Builder valuation(IValuation<LifeInsuranceAsset> valuation) {
+      this.valuation = valuation;
+      return this;
+    }
+
+    public LifeInsuranceAsset build() {
+      return new LifeInsuranceAsset(this);
+    }
   }
 
-  @Override
-  public List<String> tags() {
-    return tags != null ? tags : IAsset.super.tags();
-  }
+  // -------------------------
+  // GETTERS
+  // -------------------------
 
   public String getOwnerName() {
     return ownerName;
@@ -91,6 +127,16 @@ public final class LifeInsuranceAsset implements IAsset {
 
   public Instant getCreatedAt() {
     return createdAt;
+  }
+
+  @Override
+  public Currency currency() {
+    return currency != null ? currency : IAsset.super.currency();
+  }
+
+  @Override
+  public List<String> tags() {
+    return tags != null ? tags : IAsset.super.tags();
   }
 
   @Override

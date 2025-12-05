@@ -23,55 +23,95 @@ public final class CryptoAsset implements IAsset {
   private final IValuation<CryptoAsset> valuation;
   private final Instant createdAt;
 
-  /**
-   * Constructs a new CryptoAsset.
-   * 
-   * @param name
-   * @param symbol
-   * @param quantity
-   * @param valuation
-   * @throws NullPointerException if any argument is null
-   */
-  public CryptoAsset(String name, String symbol, BigDecimal quantity, IValuation<CryptoAsset> valuation) {
-    this(name, symbol, quantity, null, null, null, null, null, null, valuation);
-  }
+  private CryptoAsset(Builder builder) {
+    this.name = Objects.requireNonNull(builder.name);
+    this.symbol = Objects.requireNonNull(builder.symbol);
+    this.quantity = Objects.requireNonNull(builder.quantity);
+    this.valuation = Objects.requireNonNull(builder.valuation);
 
-  /**
-   * Constructs a CryptoAsset with optional metadata
-   */
-  public CryptoAsset(
-      String name,
-      String symbol,
-      BigDecimal quantity,
-      String network,
-      String walletAddress,
-      Instant acquiredAt,
-      BigDecimal purchasePrice,
-      Currency currency,
-      List<String> tags,
-      IValuation<CryptoAsset> valuation) {
-    this.name = Objects.requireNonNull(name);
-    this.symbol = Objects.requireNonNull(symbol);
-    this.quantity = Objects.requireNonNull(quantity);
-    this.network = network;
-    this.walletAddress = walletAddress;
-    this.acquiredAt = acquiredAt;
-    this.purchasePrice = purchasePrice;
-    this.currency = currency;
-    this.valuation = Objects.requireNonNull(valuation);
-    this.tags = tags != null ? List.copyOf(tags) : null;
+    this.network = builder.network;
+    this.walletAddress = builder.walletAddress;
+    this.acquiredAt = builder.acquiredAt;
+    this.purchasePrice = builder.purchasePrice;
+    this.currency = builder.currency;
+    this.tags = builder.tags != null ? List.copyOf(builder.tags) : null;
+
     this.createdAt = Instant.now();
   }
 
-  @Override
-  public Currency currency() {
-    return currency != null ? currency : IAsset.super.currency();
+  // -------------------------
+  // BUILDER
+  // -------------------------
+  public static class Builder {
+    private String name;
+    private String symbol;
+    private BigDecimal quantity;
+    private String network;
+    private String walletAddress;
+    private Instant acquiredAt;
+    private BigDecimal purchasePrice;
+    private Currency currency;
+    private List<String> tags;
+    private IValuation<CryptoAsset> valuation;
+
+    public Builder name(String name) {
+      this.name = name;
+      return this;
+    }
+
+    public Builder symbol(String symbol) {
+      this.symbol = symbol;
+      return this;
+    }
+
+    public Builder quantity(BigDecimal quantity) {
+      this.quantity = quantity;
+      return this;
+    }
+
+    public Builder network(String network) {
+      this.network = network;
+      return this;
+    }
+
+    public Builder walletAddress(String walletAddress) {
+      this.walletAddress = walletAddress;
+      return this;
+    }
+
+    public Builder acquiredAt(Instant acquiredAt) {
+      this.acquiredAt = acquiredAt;
+      return this;
+    }
+
+    public Builder purchasePrice(BigDecimal purchasePrice) {
+      this.purchasePrice = purchasePrice;
+      return this;
+    }
+
+    public Builder currency(Currency currency) {
+      this.currency = currency;
+      return this;
+    }
+
+    public Builder tags(List<String> tags) {
+      this.tags = tags;
+      return this;
+    }
+
+    public Builder valuation(IValuation<CryptoAsset> valuation) {
+      this.valuation = valuation;
+      return this;
+    }
+
+    public CryptoAsset build() {
+      return new CryptoAsset(this);
+    }
   }
 
-  @Override
-  public List<String> tags() {
-    return tags != null ? tags : IAsset.super.tags();
-  }
+  // -------------------------
+  // GETTERS
+  // -------------------------
 
   public String getNetwork() {
     return network;
@@ -99,6 +139,16 @@ public final class CryptoAsset implements IAsset {
 
   public Instant getCreatedAt() {
     return createdAt;
+  }
+
+  @Override
+  public Currency currency() {
+    return currency != null ? currency : IAsset.super.currency();
+  }
+
+  @Override
+  public List<String> tags() {
+    return tags != null ? tags : IAsset.super.tags();
   }
 
   @Override

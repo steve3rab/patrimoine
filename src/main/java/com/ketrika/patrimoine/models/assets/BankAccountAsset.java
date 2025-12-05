@@ -23,47 +23,95 @@ public final class BankAccountAsset implements IAsset {
   private final Currency currency;
   private final List<String> tags;
 
-  /**
-   * Constructs a new BankAccountAsset.
-   * 
-   * @param name the name
-   * @param iban bank account identifier
-   * @param valuation that returns current balance
-   * @throws NullPointerException if any argument is null
-   */
-  public BankAccountAsset(String name, String iban, IValuation<BankAccountAsset> valuation) {
-    this(name, iban, null, null, null, Boolean.FALSE, null, null, null, valuation);
-  }
+  private BankAccountAsset(Builder builder) {
+    this.name = Objects.requireNonNull(builder.name);
+    this.iban = Objects.requireNonNull(builder.iban);
+    this.valuation = Objects.requireNonNull(builder.valuation);
 
-  /**
-   * Constructs a new BankAccountAsset.
-   * 
-   * @param name the name
-   * @param iban bank account identifier
-   * @param bankName name of the banking institution
-   * @param bic SWIFT/BIC code of the bank
-   * @param accountHolder name of the account holder
-   * @param jointAccount whether the account is jointly owned
-   * @param openedAt timestamp when the account was opened
-   * @param currency ISO-4217 currency
-   * @param tags list of tags
-   * @param valuation that returns current balance
-   * @throws NullPointerException if any argument is null
-   */
-  public BankAccountAsset(String name, String iban, String bankName, String bic, String accountHolder, boolean jointAccount, Instant openedAt,
-      Currency currency, List<String> tags, IValuation<BankAccountAsset> valuation) {
-    this.name = Objects.requireNonNull(name);
-    this.iban = Objects.requireNonNull(iban);
-    this.bankName = bankName;
-    this.bic = bic;
-    this.accountHolder = accountHolder;
-    this.jointAccount = jointAccount;
-    this.openedAt = openedAt;
-    this.valuation = Objects.requireNonNull(valuation);
-    this.currency = currency;
-    this.tags = tags != null ? List.copyOf(tags) : null;
+    this.bankName = builder.bankName;
+    this.bic = builder.bic;
+    this.accountHolder = builder.accountHolder;
+    this.jointAccount = builder.jointAccount;
+    this.openedAt = builder.openedAt;
+    this.currency = builder.currency;
+    this.tags = builder.tags != null ? List.copyOf(builder.tags) : null;
+
     this.createdAt = Instant.now();
   }
+
+  // -------------------------
+  // BUILDER
+  // -------------------------
+  public static class Builder {
+    private String name;
+    private String iban;
+    private String bic;
+    private String bankName;
+    private String accountHolder;
+    private Boolean jointAccount = Boolean.FALSE;
+    private IValuation<BankAccountAsset> valuation;
+    private Instant openedAt;
+    private Currency currency;
+    private List<String> tags;
+
+    public Builder name(String name) {
+      this.name = name;
+      return this;
+    }
+
+    public Builder iban(String iban) {
+      this.iban = iban;
+      return this;
+    }
+
+    public Builder bankName(String bankName) {
+      this.bankName = bankName;
+      return this;
+    }
+
+    public Builder bic(String bic) {
+      this.bic = bic;
+      return this;
+    }
+
+    public Builder accountHolder(String accountHolder) {
+      this.accountHolder = accountHolder;
+      return this;
+    }
+
+    public Builder jointAccount(Boolean jointAccount) {
+      this.jointAccount = jointAccount;
+      return this;
+    }
+
+    public Builder openedAt(Instant openedAt) {
+      this.openedAt = openedAt;
+      return this;
+    }
+
+    public Builder currency(Currency currency) {
+      this.currency = currency;
+      return this;
+    }
+
+    public Builder tags(List<String> tags) {
+      this.tags = tags;
+      return this;
+    }
+
+    public Builder valuation(IValuation<BankAccountAsset> valuation) {
+      this.valuation = valuation;
+      return this;
+    }
+
+    public BankAccountAsset build() {
+      return new BankAccountAsset(this);
+    }
+  }
+
+  // ---------------------------------
+  // Getters and interface overrides
+  // ---------------------------------
 
   public String getAccountHolder() {
     return accountHolder;

@@ -25,11 +25,12 @@ public class BankAssetParser implements ITypedJsonParser<IAsset> {
       var iban = UtilsJson.text(node, "iban").orElseThrow();
       var value = new BigDecimal(UtilsJson.text(node, "value").orElse("0"));
 
-      return Optional.of(new BankAccountAsset(
-          name,
-          iban,
-          new FixedValuation<>(value)));
-
+      var bankAsset = new BankAccountAsset.Builder()
+          .name(name)
+          .iban(iban)
+          .valuation(new FixedValuation<>(value))
+          .build();
+      return Optional.of(bankAsset);
     } catch (Exception ex) {
       LOGGER.error("Invalid bank asset: {}", ex.getMessage());
       return Optional.empty();

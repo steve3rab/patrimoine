@@ -25,48 +25,109 @@ public final class CollectibleAsset implements IAsset {
   private final IValuation<CollectibleAsset> valuation;
   private final Instant createdAt;
 
-  /**
-   * Constructs a new CollectibleAsset.
-   * 
-   * @param name the name
-   * @param category the category
-   * @param valuation that returns current balance
-   * @throws NullPointerException if any argument is null
-   */
-  public CollectibleAsset(String name, String category, IValuation<CollectibleAsset> valuation) {
-    this(name, category, null, null, null, null, null, null, null, null, null, valuation);
-  }
+  private CollectibleAsset(Builder builder) {
+    this.name = Objects.requireNonNull(builder.name);
+    this.category = Objects.requireNonNull(builder.category);
+    this.valuation = Objects.requireNonNull(builder.valuation);
 
-  /**
-   * Constructs a full CollectibleAsset with optional metadata.
-   */
-  public CollectibleAsset(
-      String name,
-      String category,
-      String manufacturer,
-      String model,
-      String serialNumber,
-      Boolean limitedEdition,
-      Integer editionNumber,
-      Instant acquiredAt,
-      BigDecimal purchasePrice,
-      Currency currency,
-      List<String> tags,
-      IValuation<CollectibleAsset> valuation) {
-    this.name = Objects.requireNonNull(name);
-    this.category = Objects.requireNonNull(category);
-    this.manufacturer = manufacturer;
-    this.model = model;
-    this.serialNumber = serialNumber;
-    this.limitedEdition = limitedEdition;
-    this.editionNumber = editionNumber;
-    this.acquiredAt = acquiredAt;
-    this.purchasePrice = purchasePrice;
-    this.currency = currency;
-    this.tags = tags != null ? List.copyOf(tags) : null;
-    this.valuation = Objects.requireNonNull(valuation);
+    this.manufacturer = builder.manufacturer;
+    this.model = builder.model;
+    this.serialNumber = builder.serialNumber;
+    this.limitedEdition = builder.limitedEdition;
+    this.editionNumber = builder.editionNumber;
+    this.acquiredAt = builder.acquiredAt;
+    this.purchasePrice = builder.purchasePrice;
+    this.currency = builder.currency;
+    this.tags = builder.tags != null ? List.copyOf(builder.tags) : null;
+
     this.createdAt = Instant.now();
   }
+
+  // -------------------------
+  // BUILDER
+  // -------------------------
+  public static class Builder {
+    private String name;
+    private String category;
+    private String manufacturer;
+    private String model;
+    private String serialNumber;
+    private Boolean limitedEdition;
+    private Integer editionNumber;
+    private Instant acquiredAt;
+    private BigDecimal purchasePrice;
+    private Currency currency;
+    private List<String> tags;
+    private IValuation<CollectibleAsset> valuation;
+
+    public Builder name(String name) {
+      this.name = name;
+      return this;
+    }
+
+    public Builder category(String category) {
+      this.category = category;
+      return this;
+    }
+
+    public Builder manufacturer(String manufacturer) {
+      this.manufacturer = manufacturer;
+      return this;
+    }
+
+    public Builder model(String model) {
+      this.model = model;
+      return this;
+    }
+
+    public Builder serialNumber(String serialNumber) {
+      this.serialNumber = serialNumber;
+      return this;
+    }
+
+    public Builder limitedEdition(Boolean limitedEdition) {
+      this.limitedEdition = limitedEdition;
+      return this;
+    }
+
+    public Builder editionNumber(Integer editionNumber) {
+      this.editionNumber = editionNumber;
+      return this;
+    }
+
+    public Builder acquiredAt(Instant acquiredAt) {
+      this.acquiredAt = acquiredAt;
+      return this;
+    }
+
+    public Builder purchasePrice(BigDecimal purchasePrice) {
+      this.purchasePrice = purchasePrice;
+      return this;
+    }
+
+    public Builder currency(Currency currency) {
+      this.currency = currency;
+      return this;
+    }
+
+    public Builder tags(List<String> tags) {
+      this.tags = tags;
+      return this;
+    }
+
+    public Builder valuation(IValuation<CollectibleAsset> valuation) {
+      this.valuation = valuation;
+      return this;
+    }
+
+    public CollectibleAsset build() {
+      return new CollectibleAsset(this);
+    }
+  }
+
+  // -------------------------
+  // GETTERS
+  // -------------------------
 
   public String getManufacturer() {
     return manufacturer;

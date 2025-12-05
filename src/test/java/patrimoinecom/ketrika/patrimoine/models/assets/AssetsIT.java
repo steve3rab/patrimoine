@@ -57,32 +57,36 @@ class AssetsIT {
     person.setBirth(birth);
 
     // BankAccountAsset with FixedValuation
-    bank = new BankAccountAsset(
-        "Checking Account",
-        "MG89370400440532013000",
-        new FixedValuation<>(BigDecimal.valueOf(1000)));
+    bank = new BankAccountAsset.Builder()
+        .name("Checking Account")
+        .iban("MG89370400440532013000")
+        .valuation(new FixedValuation<>(BigDecimal.valueOf(1000)))
+        .build();
 
-    // Collectible with FixedValuation
-    collectible = new CollectibleAsset(
-        "Vintage Watch",
-        "Luxury",
-        new FixedValuation<>(BigDecimal.valueOf(5000)));
+    // CollectibleAsset with FixedValuation
+    collectible = new CollectibleAsset.Builder()
+        .name("Vintage Watch")
+        .category("Luxury")
+        .valuation(new FixedValuation<>(BigDecimal.valueOf(5000)))
+        .build();
 
-    // Crypto using MultiplicativeValuation
-    crypto = new CryptoAsset(
-        "Bitcoin",
-        "BTC",
-        BigDecimal.valueOf(2),
-        new MultiplicativeValuation<>(
+    // CryptoAsset using MultiplicativeValuation
+    crypto = new CryptoAsset.Builder()
+        .name("Bitcoin")
+        .symbol("BTC")
+        .quantity(BigDecimal.valueOf(2))
+        .valuation(new MultiplicativeValuation<>(
             BigDecimal.valueOf(30000),
-            a -> a.getQuantity().doubleValue()));
+            a -> a.getQuantity().doubleValue()))
+        .build();
 
     // TrustBeneficiaryAsset using TrustBeneficiaryValuation
-    trust = new TrustBeneficiaryAsset(
-        "Family Trust",
-        BigDecimal.valueOf(50000),
-        10,
-        new TrustBeneficiaryValuation(BigDecimal.valueOf(0.05)));
+    trust = new TrustBeneficiaryAsset.Builder()
+        .name("Family Trust")
+        .expectedPayout(BigDecimal.valueOf(50000))
+        .yearsUntilDistribution(10)
+        .valuation(new TrustBeneficiaryValuation(BigDecimal.valueOf(0.05)))
+        .build();
 
     person.addAssets(List.of(bank, collectible, crypto, trust));
   }

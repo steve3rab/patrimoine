@@ -30,58 +30,144 @@ public final class VehicleAsset implements IAsset {
   private final Currency currency;
   private final List<String> tags;
 
-  /**
-   * Constructs a VehicleAsset
-   * 
-   * @param name descriptive name
-   * @param registration license plate or identifier
-   * @param valuation the valuation(e.g depreciation)
-   * @throws NullPointerException if any argument is null
-   */
-  public VehicleAsset(String name, String registration, IValuation<VehicleAsset> valuation) {
-    this(name, registration, null, null, null, null, 0, null, null, 0, 0, null, null, 0L, registration, null, null, valuation);
+  private VehicleAsset(Builder builder) {
+    this.name = Objects.requireNonNull(builder.name);
+    this.registration = Objects.requireNonNull(builder.registration);
+    this.valuation = Objects.requireNonNull(builder.valuation);
+
+    this.ownerCompany = builder.ownerCompany;
+    this.manufacturer = builder.manufacturer;
+    this.model = builder.model;
+    this.year = builder.year;
+    this.fuelType = builder.fuelType;
+    this.transmission = builder.transmission;
+    this.seatingCapacity = builder.seatingCapacity;
+    this.horsepower = builder.horsepower;
+    this.purchasePrice = builder.purchasePrice;
+    this.purchaseDate = builder.purchaseDate;
+    this.odometerKm = builder.odometerKm;
+    this.usageType = builder.usageType;
+    this.currency = builder.currency;
+    this.tags = builder.tags != null ? List.copyOf(builder.tags) : null;
+
+    this.createdAt = Instant.now();
   }
 
-  /**
-   * Full constructor including optional metadata.
-   */
-  public VehicleAsset(
-      String name,
-      String registration,
-      Instant createdAt,
-      String ownerCompany,
-      String manufacturer,
-      String model,
-      int year,
-      String fuelType,
-      String transmission,
-      int horsepower,
-      int seatingCapacity,
-      BigDecimal purchasePrice,
-      Instant purchaseDate,
-      long odometerKm,
-      String usageType,
-      Currency currency,
-      List<String> tags, IValuation<VehicleAsset> valuation) {
-    this.name = name;
-    this.registration = registration;
-    this.ownerCompany = ownerCompany;
-    this.manufacturer = manufacturer;
-    this.model = model;
-    this.year = year;
-    this.fuelType = fuelType;
-    this.transmission = transmission;
-    this.horsepower = horsepower;
-    this.seatingCapacity = seatingCapacity;
-    this.purchasePrice = purchasePrice;
-    this.purchaseDate = purchaseDate;
-    this.odometerKm = odometerKm;
-    this.usageType = usageType;
-    this.currency = currency;
-    this.tags = tags != null ? List.copyOf(tags) : null;
-    this.createdAt = Instant.now();
-    this.valuation = Objects.requireNonNull(valuation);
+  // -------------------------
+  // BUILDER
+  // -------------------------
+  public static class Builder {
+    private String name;
+    private String registration;
+    private IValuation<VehicleAsset> valuation;
+    private String ownerCompany;
+    private String manufacturer;
+    private String model;
+    private int year;
+    private String fuelType;
+    private String transmission;
+    private int seatingCapacity;
+    private int horsepower;
+    private BigDecimal purchasePrice;
+    private Instant purchaseDate;
+    private long odometerKm;
+    private String usageType;
+    private Currency currency;
+    private List<String> tags;
+
+    public Builder name(String name) {
+      this.name = name;
+      return this;
+    }
+
+    public Builder registration(String registration) {
+      this.registration = registration;
+      return this;
+    }
+
+    public Builder valuation(IValuation<VehicleAsset> valuation) {
+      this.valuation = valuation;
+      return this;
+    }
+
+    public Builder ownerCompany(String ownerCompany) {
+      this.ownerCompany = ownerCompany;
+      return this;
+    }
+
+    public Builder manufacturer(String manufacturer) {
+      this.manufacturer = manufacturer;
+      return this;
+    }
+
+    public Builder model(String model) {
+      this.model = model;
+      return this;
+    }
+
+    public Builder year(int year) {
+      this.year = year;
+      return this;
+    }
+
+    public Builder fuelType(String fuelType) {
+      this.fuelType = fuelType;
+      return this;
+    }
+
+    public Builder transmission(String transmission) {
+      this.transmission = transmission;
+      return this;
+    }
+
+    public Builder seatingCapacity(int seatingCapacity) {
+      this.seatingCapacity = seatingCapacity;
+      return this;
+    }
+
+    public Builder horsepower(int horsepower) {
+      this.horsepower = horsepower;
+      return this;
+    }
+
+    public Builder purchasePrice(BigDecimal purchasePrice) {
+      this.purchasePrice = purchasePrice;
+      return this;
+    }
+
+    public Builder purchaseDate(Instant purchaseDate) {
+      this.purchaseDate = purchaseDate;
+      return this;
+    }
+
+    public Builder odometerKm(long odometerKm) {
+      this.odometerKm = odometerKm;
+      return this;
+    }
+
+    public Builder usageType(String usageType) {
+      this.usageType = usageType;
+      return this;
+    }
+
+    public Builder currency(Currency currency) {
+      this.currency = currency;
+      return this;
+    }
+
+    public Builder tags(List<String> tags) {
+      this.tags = tags;
+      return this;
+    }
+
+    public VehicleAsset build() {
+      return new VehicleAsset(this);
+    }
   }
+
+  // -------------------------
+  // GETTERS
+  // -------------------------
 
   public String getOwnerCompany() {
     return ownerCompany;
@@ -131,6 +217,14 @@ public final class VehicleAsset implements IAsset {
     return usageType;
   }
 
+  public String getRegistration() {
+    return registration;
+  }
+
+  public Instant getCreatedAt() {
+    return createdAt;
+  }
+
   @Override
   public Currency currency() {
     return currency != null ? currency : IAsset.super.currency();
@@ -139,14 +233,6 @@ public final class VehicleAsset implements IAsset {
   @Override
   public List<String> tags() {
     return tags != null ? tags : IAsset.super.tags();
-  }
-
-  public String getRegistration() {
-    return registration;
-  }
-
-  public Instant getCreatedAt() {
-    return createdAt;
   }
 
   @Override

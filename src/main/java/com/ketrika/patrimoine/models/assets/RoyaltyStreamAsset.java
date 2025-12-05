@@ -14,55 +14,80 @@ public final class RoyaltyStreamAsset implements IAsset {
   private final String name;
   private final BigDecimal annualRoyaltyIncome;
   private final int yearsRemaining;
-  private final String royaltyType; // e.g., "Music", "Patent", "Publishing"
+  private final String royaltyType;
   private final Currency currency;
   private final List<String> tags;
   private final IValuation<RoyaltyStreamAsset> valuation;
   private final Instant createdAt;
 
-  /**
-   * Constructs a new RoyaltyStreamAsset.
-   * 
-   * @param name
-   * @param annualRoyaltyIncome
-   * @param yearsRemaining
-   * @param valuation
-   * @throws NullPointerException if any argument is null
-   */
-  public RoyaltyStreamAsset(String name, BigDecimal annualRoyaltyIncome, int yearsRemaining, IValuation<RoyaltyStreamAsset> valuation) {
-    this(name, annualRoyaltyIncome, yearsRemaining, null, null, null, valuation);
-  }
+  private RoyaltyStreamAsset(Builder builder) {
+    this.name = Objects.requireNonNull(builder.name);
+    this.annualRoyaltyIncome = Objects.requireNonNull(builder.annualRoyaltyIncome);
+    this.yearsRemaining = Objects.requireNonNull(builder.yearsRemaining);
+    this.valuation = Objects.requireNonNull(builder.valuation);
 
-  /**
-   * Full constructor including metadata.
-   */
-  public RoyaltyStreamAsset(
-      String name,
-      BigDecimal annualRoyaltyIncome,
-      int yearsRemaining,
-      String royaltyType,
-      Currency currency,
-      List<String> tags,
-      IValuation<RoyaltyStreamAsset> valuation) {
-    this.name = Objects.requireNonNull(name);
-    this.annualRoyaltyIncome = Objects.requireNonNull(annualRoyaltyIncome);
-    this.yearsRemaining = yearsRemaining;
-    this.valuation = Objects.requireNonNull(valuation);
-    this.royaltyType = royaltyType;
-    this.currency = currency;
-    this.tags = tags != null ? List.copyOf(tags) : null;
+    this.royaltyType = builder.royaltyType;
+    this.currency = builder.currency;
+    this.tags = builder.tags != null ? List.copyOf(builder.tags) : null;
+
     this.createdAt = Instant.now();
   }
 
-  @Override
-  public Currency currency() {
-    return currency != null ? currency : IAsset.super.currency();
+  // -------------------------
+  // BUILDER
+  // -------------------------
+  public static class Builder {
+    private String name;
+    private BigDecimal annualRoyaltyIncome;
+    private Integer yearsRemaining; // for null check
+    private String royaltyType;
+    private Currency currency;
+    private List<String> tags;
+    private IValuation<RoyaltyStreamAsset> valuation;
+
+    public Builder name(String name) {
+      this.name = name;
+      return this;
+    }
+
+    public Builder annualRoyaltyIncome(BigDecimal annualRoyaltyIncome) {
+      this.annualRoyaltyIncome = annualRoyaltyIncome;
+      return this;
+    }
+
+    public Builder yearsRemaining(int yearsRemaining) {
+      this.yearsRemaining = yearsRemaining;
+      return this;
+    }
+
+    public Builder royaltyType(String royaltyType) {
+      this.royaltyType = royaltyType;
+      return this;
+    }
+
+    public Builder currency(Currency currency) {
+      this.currency = currency;
+      return this;
+    }
+
+    public Builder tags(List<String> tags) {
+      this.tags = tags;
+      return this;
+    }
+
+    public Builder valuation(IValuation<RoyaltyStreamAsset> valuation) {
+      this.valuation = valuation;
+      return this;
+    }
+
+    public RoyaltyStreamAsset build() {
+      return new RoyaltyStreamAsset(this);
+    }
   }
 
-  @Override
-  public List<String> tags() {
-    return tags != null ? tags : IAsset.super.tags();
-  }
+  // -------------------------
+  // GETTERS
+  // -------------------------
 
   public String getRoyaltyType() {
     return royaltyType;
@@ -81,8 +106,17 @@ public final class RoyaltyStreamAsset implements IAsset {
   }
 
   @Override
+  public Currency currency() {
+    return currency != null ? currency : IAsset.super.currency();
+  }
+
+  @Override
+  public List<String> tags() {
+    return tags != null ? tags : IAsset.super.tags();
+  }
+
+  @Override
   public BigDecimal value() {
-    // Value = AnnualRoyaltyIncome × YearsRemaining
     return valuation.calculate(this);
   }
 

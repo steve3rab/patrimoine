@@ -19,43 +19,67 @@ public final class TrustBeneficiaryAsset implements IAsset {
   private final IValuation<TrustBeneficiaryAsset> valuation;
   private final Instant createdAt;
 
-  /**
-   * Constructs a new TrustBeneficiaryAsset.
-   * 
-   * @param name
-   * @param expectedPayout
-   * @param yearsUntilDistribution
-   * @param valuation
-   * @throws NullPointerException if any argument is null
-   */
-  public TrustBeneficiaryAsset(String name, BigDecimal expectedPayout, int yearsUntilDistribution, IValuation<TrustBeneficiaryAsset> valuation) {
-    this(name, expectedPayout, yearsUntilDistribution, null, null, valuation);
-  }
+  private TrustBeneficiaryAsset(Builder builder) {
+    this.name = Objects.requireNonNull(builder.name);
+    this.expectedPayout = Objects.requireNonNull(builder.expectedPayout);
+    this.yearsUntilDistribution = Objects.requireNonNull(builder.yearsUntilDistribution);
+    this.valuation = Objects.requireNonNull(builder.valuation);
 
-  /**
-   * Full constructor including optional metadata.
-   */
-  public TrustBeneficiaryAsset(String name, BigDecimal expectedPayout, int yearsUntilDistribution,
-      Currency currency,
-      List<String> tags, IValuation<TrustBeneficiaryAsset> valuation) {
-    this.name = Objects.requireNonNull(name);
-    this.expectedPayout = Objects.requireNonNull(expectedPayout);
-    this.yearsUntilDistribution = yearsUntilDistribution;
-    this.valuation = Objects.requireNonNull(valuation);
-    this.currency = currency;
-    this.tags = tags != null ? List.copyOf(tags) : null;
+    this.currency = builder.currency;
+    this.tags = builder.tags != null ? List.copyOf(builder.tags) : null;
+
     this.createdAt = Instant.now();
   }
 
-  @Override
-  public Currency currency() {
-    return currency != null ? currency : IAsset.super.currency();
+  // -------------------------
+  // BUILDER
+  // -------------------------
+  public static class Builder {
+    private String name;
+    private BigDecimal expectedPayout;
+    private Integer yearsUntilDistribution; // for null check
+    private Currency currency;
+    private List<String> tags;
+    private IValuation<TrustBeneficiaryAsset> valuation;
+
+    public Builder name(String name) {
+      this.name = name;
+      return this;
+    }
+
+    public Builder expectedPayout(BigDecimal expectedPayout) {
+      this.expectedPayout = expectedPayout;
+      return this;
+    }
+
+    public Builder yearsUntilDistribution(int yearsUntilDistribution) {
+      this.yearsUntilDistribution = yearsUntilDistribution;
+      return this;
+    }
+
+    public Builder currency(Currency currency) {
+      this.currency = currency;
+      return this;
+    }
+
+    public Builder tags(List<String> tags) {
+      this.tags = tags;
+      return this;
+    }
+
+    public Builder valuation(IValuation<TrustBeneficiaryAsset> valuation) {
+      this.valuation = valuation;
+      return this;
+    }
+
+    public TrustBeneficiaryAsset build() {
+      return new TrustBeneficiaryAsset(this);
+    }
   }
 
-  @Override
-  public List<String> tags() {
-    return tags != null ? tags : IAsset.super.tags();
-  }
+  // -------------------------
+  // GETTERS
+  // -------------------------
 
   public BigDecimal getExpectedPayout() {
     return expectedPayout;
@@ -67,6 +91,16 @@ public final class TrustBeneficiaryAsset implements IAsset {
 
   public Instant getCreatedAt() {
     return createdAt;
+  }
+
+  @Override
+  public Currency currency() {
+    return currency != null ? currency : IAsset.super.currency();
+  }
+
+  @Override
+  public List<String> tags() {
+    return tags != null ? tags : IAsset.super.tags();
   }
 
   @Override
